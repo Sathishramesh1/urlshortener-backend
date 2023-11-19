@@ -1,16 +1,18 @@
-import { MongoClient } from "mongodb";
-import Obj from "mongodb";
-import dotenv from "dotenv";
+import mongoose from 'mongoose';
 
-dotenv.config();
-const mongoConnectString = process.env.MONGO_URL;
 
-export async function dbConnection() {
-  const client = new MongoClient(mongoConnectString);
-  await client.connect();
-  console.log("Mongo DB connected succesfully");
-  return client;
-}
+const dbconnection = async function  dataBaseConnection() {
+    const params = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    };
+    try {
+      mongoose.set("strictQuery", true);
+     await mongoose.connect(process.env.DB_URL, params);
+      console.log("MongoDB connected sucessfully");
+    } catch (error) {
+      console.log("MongoDB Connection Failed", error);
+    }
+  }
 
-export var ObjectId = Obj.ObjectId;
-export const client = await dbConnection();
+  export {dbconnection}
