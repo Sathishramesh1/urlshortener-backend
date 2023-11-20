@@ -1,43 +1,36 @@
-// import {client} from "../db.js";
-// import { ObjectId } from "bson"; 
-// import jwt from "jsonwebtoken";
+import { Url } from "../Models/UrlModel";
+import { nanoid } from 'nanoid'
 
-// export function addURL(data){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .insertOne(data)
-// }
-// export function getURL(data){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .findOne(data)
-// } 
-// export function getAllURL(email){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .find({user: email})
-//     .toArray()
-// } 
-// export function urlDayCount(email,today){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .find({user: email, createdOn:{$eq: today} })
-//     .toArray()
-// } 
-// export function urlMonthCount(email,date){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .find({user: email, createdOn:{$gte:date}})
-//     .toArray()
-// } 
-// export function updateCount(id){
-//     return client
-//     .db("URLData")
-//     .collection("url")
-//     .findOneAndUpdate({urlID:id}, {$inc:{"clicked":1}}, {returnDocument:"after"})
-// } 
+
+const createUrl = async(req,res)=>{
+    const {longUrl} = req.body;
+    try {
+        let url = await Url.findOne({longUrl})
+        if(!url){
+            const shortUrl = shortid(8);
+            const url = await Url.create({
+                longUrl,
+                shortUrl,
+                userId: id
+                
+            })
+            res.json({
+                message: "Url create successfull",
+                statusCode: 201,
+                url
+            });
+        }else{
+            res.json({
+                message:'Given url already found',
+                statusCode:400
+            })
+        }
+       
+    } catch (error) { 
+        console.log(error)
+        res.json({
+            message:'Internal server error',
+            statusCode:500
+        })
+    }
+}

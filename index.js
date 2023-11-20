@@ -3,7 +3,7 @@ import express from "express"
 import dotenv from "dotenv";
 import cors from "cors";
 import { dbconnection } from "./db.js";
-// import { userRouter } from "./Routes/users.js";
+import { UserRouter } from "./Routes/users.js";
 // import { urlRouter } from "./Routes/urls.js";
 // import { isAuthenticated } from "./Authentication/userAuth.js";
 // import { getURL } from './Controllers/urls.js';
@@ -20,7 +20,7 @@ app.use(cors());
 dbconnection();
 
 //user is the base route 
-// app.use("/user", userRouter);
+app.use("/user", UserRouter);
 // app.use("/url", isAuthenticated, urlRouter);
 
 app.get("/", (req,res)=> {
