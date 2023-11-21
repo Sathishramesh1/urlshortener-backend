@@ -4,6 +4,7 @@ import {User} from '../Models/UserModel.js';
 import crypto from 'crypto'
 import { sendMail } from '../Services/mailService.js';
 import jwt from 'jsonwebtoken'
+import { Url } from '../Models/UrlModel.js';
 
 
 //function to handle new user registration
@@ -141,16 +142,24 @@ export const Forget = async(req,res)=>{
 //redirect the given url page
 
 export const redirectUrl = async(req,res)=>{
-    const {shortUrl} = req.params
+    const {shortUrl} = req.params;
+   
     try {
+        console.log(shortUrl)
+        let data = await Url.findOne({
+            'urls.shortUrl': shortUrl
+        });
+           console.log(data)
         
-        let data = await Url.findOne({'urls.shortUrl':shortUrl})
         if(data){
-            await Url.findByIdAndUpdate(
-                {_id:data._id},
-                {$inc:{clickCount:1}}
-            )
-            res.redirect(data.longUrl);
+           
+          const ans=data.urls.find((ele)=>ele.shortUrl==shortUrl).clickCount++
+          data.save();
+          
+           
+            
+           console.log("helo",ans.longUrl)
+           res.redirect(ans.longUrl);
 
         }else{
             res.status(200).json({

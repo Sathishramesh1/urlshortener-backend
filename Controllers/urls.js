@@ -15,9 +15,9 @@ export const createUrl = async(req,res)=>{
                 ,{$push:{urls:{longUrl:longUrl,shortUrl:shortUrl}}},
                 { upsert: true, new: true });
             
-          return  res.status(201).json({message:'new url added'})
+          return  res.status(201).json({message:'new url added'});
         }else{
-         return   res.status(400).json({message:'User not found'})
+         return   res.status(400).json({message:'User not found'});
         }
        
     } catch (error) { 
@@ -61,7 +61,6 @@ export const getAllUrl=async(req,res)=>{
 
 
 //function to get today url
-
 export const todayUrl=async(req,res)=>{
 
     try {
@@ -83,11 +82,6 @@ export const todayUrl=async(req,res)=>{
         console.log(error)
         res.status(500).json({
             message:'Internal server error',
-           
-        });
-
-        
+        });   
     }
-
-
 }

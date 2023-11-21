@@ -26,12 +26,12 @@ app.use("/user", UserRouter);
 app.use("/url",isAuthorized, UrlRouter);
 
 app.get("/", (req,res)=> {
-   res.send({msg:"connection working - URL shortener app"});
+   res.status(200).send({msg:"connection working - URL shortener app"});
 });
 
 
 //redirect based on short url
-app.get("/:ShortUrl",redirectUrl)
+app.get("/:shortUrl",redirectUrl)
 
 
  
