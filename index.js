@@ -4,8 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { dbconnection } from "./db.js";
 import { UserRouter } from "./Routes/users.js";
+import { UrlRouter } from "./Routes/urls.js";
 // import { urlRouter } from "./Routes/urls.js";
-// import { isAuthenticated } from "./Authentication/userAuth.js";
+import  {isAuthorized}  from "./Authentication/userAuth.js";
+import { redirectUrl } from "./Controllers/user.js";
 // import { getURL } from './Controllers/urls.js';
 
 dotenv.config();
@@ -21,29 +23,16 @@ dbconnection();
 
 //user is the base route 
 app.use("/user", UserRouter);
-// app.use("/url", isAuthenticated, urlRouter);
+app.use("/url",isAuthorized, UrlRouter);
 
 app.get("/", (req,res)=> {
    res.send({msg:"connection working - URL shortener app"});
-})
+});
 
-// To get URL redirection from short URL 
-// app.get('/:urlID', async(req, res)=>{
-//    try{
-//        const url = await getURL({urlID: req.params.urlID})
-//        if(url){
-//            console.log("redirecting");
-//            return res.status(200).json({longURL:url.longURL})
-//          //return res.redirect(url.longURL)
-//        }
-//        else{
-//            return res.status(404).json({message: 'No URL Found'})
-//        }
-//    }
-//    catch(err){
-//        console.error(err)
-//        res.status(500).json('Server Error')
-//    }
-//  })
+
+//redirect based on short url
+app.get("/:ShortUrl",redirectUrl)
+
+
  
 app.listen(PORT,()=>console.log(`Server started at localhost:${PORT}`))

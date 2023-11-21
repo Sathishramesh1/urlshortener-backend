@@ -136,3 +136,33 @@ export const Forget = async(req,res)=>{
     
     }
     
+
+
+//redirect the given url page
+
+export const redirectUrl = async(req,res)=>{
+    const {shortUrl} = req.params
+    try {
+        
+        let data = await Url.findOne({'urls.shortUrl':shortUrl})
+        if(data){
+            await Url.findByIdAndUpdate(
+                {_id:data._id},
+                {$inc:{clickCount:1}}
+            )
+            res.redirect(data.longUrl);
+
+        }else{
+            res.status(200).json({
+                message:"Url redirect failed",
+               
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            message:'Internal server error',
+          
+        })
+    }
+};

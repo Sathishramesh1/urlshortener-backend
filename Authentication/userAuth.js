@@ -1,12 +1,27 @@
-import jwt from "jsonwebtoken";
+import {User} from '../Models/UserModel.js'
+import jwt from 'jsonwebtoken'
 
-export function isAuthenticated(req,res,next){
-    const token = req.headers["x-auth-token"];
-    if(!token){
-        return res.status(400).json({message:"Invalid Authorization"});
+ function getUserById(id) {
+    return User.findById(id).select("_id firstName lastName email");
+  }
+
+
+
+// custom middleware
+export const isAuthorized = async (req,res,next) => {
+    let token;
+    if (req.header) {
+      try {
+        token = await req.headers["x-auth-token"];
+        const decode = jwt.verify(token, process.env.SECRET_KEY);
+        req.user = await getUserById(decode.id);
+        next();
+        
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server error" });
+      }
     }
-    //console.log(token);
-    const decode = jwt.verify(token, process.env.SECRET_KEY);
-    //console.log(decode);
-    next();
-}
+  };
+  
+  
