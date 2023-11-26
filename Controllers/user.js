@@ -21,7 +21,7 @@ export const Register=async(req,res)=>{
     const hashedPassword = await bcrypt.hash(password,10);
     
     // Generate a ActivationKey
- const ActivationKey = jwt.sign({id:user._id}, process.env.SECRET_KEY);;
+ const ActivationKey = jwt.sign({id:req.body.email}, process.env.SECRET_KEY);;
  
 
     const newUser= await new User({ ...req.body, password: hashedPassword ,activationKey:ActivationKey}).save();
@@ -82,8 +82,8 @@ export const Activate=async(req,res)=>{
 try {
 
     const  activationKey=req.params ;
-    const decode = jwt.verify(activationKey, process.env.SECRET_KEY);
-    const user=await User.findById(decode.id);
+    const decode = jwt.verify(activationKey, process.env.SECRET_KEY).id;
+    const user=await User.findOne({email:decode});
     if(!user){
 
         return res.status(404).json({message:"Unable to Find User"});
