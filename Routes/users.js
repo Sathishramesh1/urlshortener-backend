@@ -8,7 +8,7 @@ router.route('/register').post(Register);
 
 
 //route for account activation
-router.route('/:activationKey').post(Activate)
+router.route('/activate/:activationKey').post(Activate)
 
 //route for login
 router.route('/login').post(Login);
