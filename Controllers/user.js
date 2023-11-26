@@ -26,7 +26,8 @@ export const Register=async(req,res)=>{
 
     const newUser= await new User({ ...req.body, password: hashedPassword ,activationKey:ActivationKey}).save();
 
-    sendMail(req.email,"Activation Link",ActivationKey);
+const activationurl=`http://localhost:5173/${ActivationKey}`
+    sendMail(req.body.email,"Activation Link",activationurl);
     
     res.status(201).json({
         status:'success',
