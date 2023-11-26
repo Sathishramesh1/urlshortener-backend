@@ -85,3 +85,69 @@ export const todayUrl=async(req,res)=>{
         });   
     }
 }
+
+// function to get this month's URL
+export const thisMonthUrl = async (req, res) => {
+    try {
+      const userUrls = await Url.findOne({ user: req.user._id });
+      if (userUrls) {
+        const currentDate = new Date();
+  
+        // Set the time to midnight of the first day of the current month
+        currentDate.setDate(1);
+        currentDate.setHours(0, 0, 0, 0);
+  
+        const thisMonthUrlList = userUrls.urls.filter(
+          (ele) => ele.date >= currentDate
+        );
+  
+        return res
+          .status(200)
+          .json({ thisMonthUrlList, message: "UrlList Retrived Successfully" });
+      } else {
+        return res.status(404).json({ message: 'Unable to Find the UrlList' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  };
+
+  export const Dashboard=async(req,res)=>{
+
+    try {
+        const userUrls = await Url.findOne({user:req.user._id});
+        if (userUrls) {
+
+            const currentDate = new Date();
+            // Set the time to midnight of the current date
+            currentDate.setHours(0, 0, 0, 0);
+            const todayUrlList=userUrls.urls.filter((ele)=>ele.date>=currentDate).length;
+
+       //monthly count
+       const currentDateMonth = new Date();
+  
+       // Set the time to midnight of the first day of the current month
+       currentDateMonth.setDate(1);
+       currentDateMonth.setHours(0, 0, 0, 0);
+ 
+       const thisMonthUrlList = userUrls.urls.filter(
+         (ele) => ele.date >= currentDateMonth).length;
+
+            return res.status(200).json({ todayUrlList,thisMonthUrlList,message:"UrlList Retrived Successfully"})
+            
+          } else {
+            return res.status(404).json({message:'Unable to Find the UrlList'})
+            
+          }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          message: 'Internal server error',
+        });
+        
+    }
+  }

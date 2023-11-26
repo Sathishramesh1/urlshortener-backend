@@ -20,7 +20,7 @@ router.route("/forget").post(Forget);
 
 
 //route for reset Password
-router.route("/reset").post(Reset);
+router.route("/reset/:resetToken").post(Reset);
 
 
 

@@ -120,11 +120,11 @@ export const Forget = async(req,res)=>{
       // Store the token in the database
       user.resetToken = token;
       await user.save();
-      
+      const resetUrl=`http://localhost:5173/${token}`
       //send password resetting mail
       sendMail(email,"password-reset",`
       Click below Link to Reset Your Password
-     ${token}`);
+     ${resetUrl}`);
     
       res.status(200).json({message:`The password reset mail send to ${email}`})
     

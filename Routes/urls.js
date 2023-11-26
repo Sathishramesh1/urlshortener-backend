@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUrl, getAllUrl, todayUrl } from '../Controllers/urls.js';
+import { Dashboard, createUrl, getAllUrl, thisMonthUrl, todayUrl } from '../Controllers/urls.js';
 
 
 const router=express.Router();
@@ -15,15 +15,17 @@ router.route("/getAllUrl").get(getAllUrl);
 
 
 
-//route for get all url
+//route for get today url
 router.route("/getTodayUrl").get(todayUrl);
 
 
 
+//route for this monthly url
+router.route('/getThisMonth').get(thisMonthUrl)
 
 
-
-
+//dashboard count
+router.route('/dashboard').get(Dashboard)
 
 
 
