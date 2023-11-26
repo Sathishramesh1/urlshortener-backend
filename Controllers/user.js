@@ -21,7 +21,8 @@ export const Register=async(req,res)=>{
     const hashedPassword = await bcrypt.hash(password,10);
     
     // Generate a ActivationKey
- const ActivationKey = crypto.randomBytes(25).toString("hex");
+ const ActivationKey = jwt.sign({id:user._id}, process.env.SECRET_KEY);;
+ 
 
     const newUser= await new User({ ...req.body, password: hashedPassword ,activationKey:ActivationKey}).save();
 
@@ -75,6 +76,33 @@ const jwttoken = jwt.sign({id:user._id}, process.env.SECRET_KEY);
 }
 
 
+//function to activate the account
+export const Activate=async(req,res)=>{
+
+try {
+
+    const  activationKey=req.params ;
+    const decode = jwt.verify(activationKey, process.env.SECRET_KEY);
+    const user=await User.findById(decode.id);
+    if(!user){
+
+        return res.status(404).json({message:"Unable to Find User"});
+    }
+    user.isActivated=true ;
+    user.save();
+    return res.status(201).json({message:"Account activated Successfully"})
+    
+} catch (error) {
+    res.status(500).send('Internal server error');
+    console.log(error)
+    
+}
+
+
+}
+
+
+
 //function to handle Forget Password 
 export const Forget = async(req,res)=>{
 
@@ -101,7 +129,7 @@ export const Forget = async(req,res)=>{
     
     } catch (error) {
         console.log("User email not found",error);
-        res.status(404).send("Error occured ",error);
+        res.status(500).send("Error occured ",error);
     }
     
     
