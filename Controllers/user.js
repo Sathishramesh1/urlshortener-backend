@@ -82,7 +82,7 @@ export const Activate=async(req,res)=>{
 
 try {
 
-    const  activationKey=req.params ;
+    const  {activationKey}=req.params ;
     const decode = jwt.verify(activationKey, process.env.SECRET_KEY).id;
     const user=await User.findOne({email:decode});
     if(!user){
