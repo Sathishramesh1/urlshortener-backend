@@ -172,8 +172,7 @@ export const Forget = async(req,res)=>{
 
 export const redirectUrl = async(req,res)=>{
     const {shortUrl} = req.params;
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.header('Access-Control-Allow-Credentials', true);
+   
     try {
        
         let data = await Url.findOne({
@@ -192,20 +191,16 @@ export const redirectUrl = async(req,res)=>{
               { new: true } // Return the updated document
             );
     
-            // console.log('Updated data:', updatedData);
+            res.status(200).json({longUrl:urlObject.longUrl});
     
             // Redirect to the long URL
-            res.redirect(urlObject.longUrl);
+            // res.redirect(urlObject.longUrl);
           } else {
             res.status(200).json({
               message: 'Url redirect failed',
             });
           }
           
-           
-            
-        //    console.log("helo",ans.longUrl)
-        //    res.redirect(ans.longUrl);
 
         }else{
             res.status(200).json({
