@@ -172,7 +172,8 @@ export const Forget = async(req,res)=>{
 
 export const redirectUrl = async(req,res)=>{
     const {shortUrl} = req.params;
-   
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.header('Access-Control-Allow-Credentials', true);
     try {
        
         let data = await Url.findOne({
