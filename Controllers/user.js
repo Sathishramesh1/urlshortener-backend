@@ -174,7 +174,7 @@ export const redirectUrl = async(req,res)=>{
     const {shortUrl} = req.params;
    
     try {
-        console.log(shortUrl)
+       
         let data = await Url.findOne({
             'urls.shortUrl': shortUrl
         });
@@ -182,13 +182,29 @@ export const redirectUrl = async(req,res)=>{
         
         if(data){
            
-          const ans=data.urls.find((ele)=>ele.shortUrl==shortUrl).clickCount++
-          data.save();
+          const urlObject=data.urls.find((ele)=>ele.shortUrl==shortUrl)
+          if (urlObject) {
+            // Increment clickCount and save to the database atomically
+            const updatedData = await Url.findOneAndUpdate(
+              { 'urls.shortUrl': shortUrl },
+              { $inc: { 'urls.$.clickCount': 1 } },
+              { new: true } // Return the updated document
+            );
+    
+            // console.log('Updated data:', updatedData);
+    
+            // Redirect to the long URL
+            res.redirect(urlObject.longUrl);
+          } else {
+            res.status(200).json({
+              message: 'Url redirect failed',
+            });
+          }
           
            
             
-           console.log("helo",ans.longUrl)
-           res.redirect(ans.longUrl);
+        //    console.log("helo",ans.longUrl)
+        //    res.redirect(ans.longUrl);
 
         }else{
             res.status(200).json({
