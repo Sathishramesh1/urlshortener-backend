@@ -15,8 +15,15 @@ const PORT = process.env.PORT;
 const app = express(); 
 
 
+const corsOptions = {
+   origin: "http://localhost:5173", // Replace with your client's origin
+   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+   credentials: true,
+   optionsSuccessStatus: 204,
+ };
+
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 dbconnection();
