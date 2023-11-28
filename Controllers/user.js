@@ -26,8 +26,10 @@ export const Register=async(req,res)=>{
 
     const newUser= await new User({ ...req.body, password: hashedPassword ,activationKey:ActivationKey}).save();
 
-const activationurl=`http://localhost:5173/${ActivationKey}`
-    sendMail(req.body.email,"Activation Link",activationurl);
+const activationurl=`https://url-shortner96.netlify.app/activate/${ActivationKey}`
+    sendMail(req.body.email,"Activation Link",`
+    Click below link to activate your account
+    ${activationurl}`);
     
     res.status(201).json({
         status:'success',
@@ -120,7 +122,7 @@ export const Forget = async(req,res)=>{
       // Store the token in the database
       user.resetToken = token;
       await user.save();
-      const resetUrl=`http://localhost:5173/${token}`
+      const resetUrl=`https://url-shortner96.netlify.app/reset/${token}`
       //send password resetting mail
       sendMail(email,"password-reset",`
       Click below Link to Reset Your Password
